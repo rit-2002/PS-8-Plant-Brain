@@ -1,0 +1,31 @@
+WORK ORDER #WO-4471
+Plant: Vizag Steel Works - Coke Oven Battery 3
+Equipment Tag: COB-3-FAN-02 (Induced Draft Fan)
+Date Raised: 2026-02-14
+Date Closed: 2026-02-16
+Raised By: Senior Engineer S. Rao
+Assigned To: Maintenance Team C (Mechanical)
+
+DESCRIPTION:
+Induced draft fan COB-3-FAN-02 reported abnormal vibration (8.2 mm/s RMS, above
+alarm threshold of 7.1 mm/s) during routine shift inspection. Vibration trend
+shows gradual increase over preceding 3 weeks consistent with bearing wear.
+
+ACTIONS TAKEN:
+1. Fan taken offline under Permit-to-Work PTW-2291.
+2. Bearing housing inspected; outer race spalling found on non-drive end bearing.
+3. Bearing replaced (SKF 22222 spherical roller bearing).
+4. Post-replacement vibration reading: 1.8 mm/s RMS - within normal range.
+5. Fan returned to service 2026-02-16, 14:30 hrs.
+
+ROOT CAUSE: Lubrication interval exceeded recommended OEM schedule by 6 weeks
+due to backlog in PM scheduling system. Similar bearing failures recorded on
+COB-1-FAN-01 in 2025 (WO-3982) and COB-2-FAN-04 in 2024 (WO-3210) - same root
+cause pattern.
+
+RECOMMENDATION: Review PM scheduling backlog across all coke oven battery
+induced draft fans. Cross-reference with Incident Report INC-2025-0118 which
+flagged gas pressure anomalies in the same battery during a related shutdown.
+
+REGULATORY REFERENCE: Factory Act 1948, Section 87 (Maintenance of Plant and
+Machinery); OISD-STD-113 (Coke Oven Safety).

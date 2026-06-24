@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plant Brain — Industrial Knowledge Intelligence</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.9/standalone/umd/vis-network.min.js"></script>
+<style>
+  :root{
+    --bg:#13161c;
+    --panel:#1b1f28;
+    --panel-2:#20242f;
+    --line:#2c313d;
+    --amber:#e8a23a;
+    --amber-dim:#8a6326;
+    --text:#e7e6e1;
+    --text-dim:#8d92a0;
+    --good:#5fa86a;
+    --doc:#2563eb;
+    --equip:#dc2626;
+    --reg:#9333ea;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans', 'Segoe UI', Arial, sans-serif;
+  }
+  .topbar{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    padding:22px 32px 16px 32px;
+    border-bottom:1px solid var(--line);
+  }
+  .brand{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    letter-spacing:0.18em;
+    color:var(--amber);
+    text-transform:uppercase;
+  }
+  .brand-title{
+    font-size:26px;
+    font-weight:600;
+    margin-top:4px;
+    letter-spacing:-0.01em;
+  }
+  .stats-row{
+    display:flex;
+    gap:28px;
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .stat{ text-align:right; }
+  .stat .n{ font-size:22px; color:var(--amber); font-weight:600; }
+  .stat .l{ font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; }
+
+  .layout{
+    display:grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap:18px;
+    padding:18px 32px 32px 32px;
+    max-width:1500px;
+    margin:0 auto;
+  }
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  .panel-head{
+    padding:14px 18px;
+    border-bottom:1px solid var(--line);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--text-dim);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  #graph{ height:480px; background:var(--panel-2); }
+  .legend{ display:flex; gap:14px; font-size:11px; color:var(--text-dim); }
+  .dot{ width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:5px; }
+
+  .chat-area{ display:flex; flex-direction:column; height:480px; }
+  .messages{ flex:1; overflow-y:auto; padding:16px 18px; display:flex; flex-direction:column; gap:14px; }
+  .msg-user{ align-self:flex-end; background:var(--amber-dim); color:#fff2dd; padding:10px 14px; border-radius:8px 8px 2px 8px; max-width:85%; font-size:14px; }
+  .msg-bot{ align-self:flex-start; background:var(--panel-2); border:1px solid var(--line); padding:12px 14px; border-radius:8px 8px 8px 2px; max-width:95%; font-size:13.5px; line-height:1.55; white-space:pre-wrap; }
+  .citations{ margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+  .citation-chip{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; background:rgba(37,99,235,0.15); color:#8db2ff; border:1px solid rgba(37,99,235,0.35); padding:3px 8px; border-radius:12px; cursor:pointer; }
+  .input-row{ display:flex; border-top:1px solid var(--line); }
+  #q{ flex:1; background:var(--panel-2); border:none; color:var(--text); padding:14px 16px; font-size:14px; outline:none; }
+  #q::placeholder{ color:var(--text-dim); }
+  #send{ background:var(--amber); border:none; color:#1a1300; font-weight:700; padding:0 22px; cursor:pointer; font-size:13px; letter-spacing:0.04em; }
+  #send:hover{ background:#f0b34f; }
+
+  .suggestions{ padding:10px 18px 16px; display:flex; flex-wrap:wrap; gap:8px; border-bottom:1px solid var(--line); }
+  .sugg{ font-size:11.5px; background:var(--panel-2); border:1px solid var(--line); color:var(--text-dim); padding:6px 10px; border-radius:14px; cursor:pointer; }
+  .sugg:hover{ border-color:var(--amber); color:var(--amber); }
+
+  .doc-list{ padding:14px 18px; overflow-y:auto; }
+  .doc-item{ padding:9px 0; border-bottom:1px solid var(--line); font-size:13px; display:flex; justify-content:space-between; gap:10px; }
+  .doc-item:last-child{ border-bottom:none; }
+  .doc-type{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--text-dim); white-space:nowrap; }
+
+  .status{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--text-dim); padding:8px 32px; }
+  .status.ok{ color:var(--good); }
+  .status.err{ color:#e05858; }
+  .intelligence{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:18px;
+    padding:0 32px 32px 32px;
+    max-width:1500px;
+    margin:0 auto;
+  }
+  .intel-body{ padding:14px 18px; display:flex; flex-direction:column; gap:12px; }
+  .intel-summary{ font-size:13px; color:var(--text); line-height:1.45; }
+  .intel-item{ border-top:1px solid var(--line); padding-top:10px; font-size:12.5px; line-height:1.45; color:var(--text-dim); }
+  .intel-link{ color:#8db2ff; text-decoration:none; font-family:'IBM Plex Mono', monospace; font-size:10.5px; display:inline-block; margin-top:6px; }
+  @media (max-width: 950px){
+    .layout{ grid-template-columns:1fr; padding:14px; }
+    .topbar{ padding:18px 14px; flex-direction:column; gap:14px; }
+    .stats-row{ width:100%; justify-content:space-between; }
+    .intelligence{ grid-template-columns:1fr; padding:0 14px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <div class="brand">PS-08 · INDUSTRIAL KNOWLEDGE INTELLIGENCE</div>
+    <div class="brand-title">Plant Brain</div>
+  </div>
+  <div class="stats-row" id="stats">
+    <div class="stat"><div class="n" id="stat-docs">–</div><div class="l">Documents</div></div>
+    <div class="stat"><div class="n" id="stat-ents">–</div><div class="l">Entities</div></div>
+    <div class="stat"><div class="n" id="stat-links">–</div><div class="l">Links</div></div>
+  </div>
+</div>
+<div class="status" id="conn-status">connecting to API at <span id="api-url"></span> …</div>
+
+<div class="layout">
+
+  <div class="panel">
+    <div class="panel-head">
+      <span>Unified Knowledge Graph</span>
+      <div class="legend">
+        <span><span class="dot" style="background:var(--doc)"></span>Document</span>
+        <span><span class="dot" style="background:var(--equip)"></span>Equipment</span>
+        <span><span class="dot" style="background:var(--reg)"></span>Regulation</span>
+      </div>
+    </div>
+    <div id="graph"></div>
+    <div class="panel-head" style="border-top:1px solid var(--line); border-bottom:none;">Ingested Source Documents</div>
+    <div class="doc-list" id="doc-list" style="max-height:160px;"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">Expert Knowledge Copilot</div>
+    <div class="suggestions" id="suggestions"></div>
+    <div class="chat-area">
+      <div class="messages" id="messages">
+        <div class="msg-bot">Ask me anything across the maintenance, safety, inspection, incident and audit records for Coke Oven Battery 3 — e.g. "Why does GPS-COB3-07 keep coming up?" I'll answer with citations back to the source documents.</div>
+      </div>
+      <div class="input-row">
+        <input id="q" type="text" placeholder="Ask about an equipment tag, incident, or compliance gap…" />
+        <button id="send">ASK</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="intelligence">
+  <div class="panel">
+    <div class="panel-head">Compliance Gaps</div>
+    <div class="intel-body" id="compliance"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head">Maintenance RCA</div>
+    <div class="intel-body" id="maintenance"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head">Lessons Learned</div>
+    <div class="intel-body" id="lessons"></div>
+  </div>
+</div>
+
+<script>
+const API = "http://localhost:8000";
+document.getElementById("api-url").textContent = API;
+
+const statusEl = document.getElementById("conn-status");
+
+async function loadStats() {
+  try {
+    const r = await fetch(API + "/api/stats");
+    const d = await r.json();
+    document.getElementById("stat-docs").textContent = d.documents;
+    document.getElementById("stat-ents").textContent = d.entities;
+    document.getElementById("stat-links").textContent = d.links;
+    statusEl.textContent = "connected · corpus indexed";
+    statusEl.className = "status ok";
+  } catch (e) {
+    statusEl.textContent = "could not reach API — run `uvicorn app:app --reload --port 8000` in /backend, then refresh.";
+    statusEl.className = "status err";
+  }
+}
+
+async function loadDocs() {
+  try {
+    const r = await fetch(API + "/api/documents");
+    const docs = await r.json();
+    const list = document.getElementById("doc-list");
+    list.innerHTML = "";
+    docs.forEach(d => {
+      const row = document.createElement("div");
+      row.className = "doc-item";
+      row.innerHTML = `<span>${d.title}</span><span class="doc-type">${d.doc_type}</span>`;
+      list.appendChild(row);
+    });
+  } catch (e) {}
+}
+
+async function loadGraph() {
+  try {
+    const r = await fetch(API + "/api/graph");
+    const data = await r.json();
+    const nodes = new vis.DataSet(data.nodes);
+    const edges = new vis.DataSet(data.edges);
+    const container = document.getElementById("graph");
+    const network = new vis.Network(container, { nodes, edges }, {
+      nodes: {
+        shape: "dot",
+        size: 14,
+        font: { color: "#e7e6e1", size: 11, face: "IBM Plex Mono" },
+        borderWidth: 0,
+      },
+      edges: {
+        color: { color: "#39404e", opacity: 0.6 },
+        width: 1,
+        smooth: { type: "continuous" },
+      },
+      physics: { stabilization: true, barnesHut: { gravitationalConstant: -4000, springLength: 110 } },
+      interaction: { hover: true },
+    });
+  } catch (e) {}
+}
+
+const suggestions = [
+  "Why does GPS-COB3-07 keep coming up?",
+  "What compliance gap was flagged in the audit?",
+  "What caused the fan bearing failure?",
+  "What is the escalation trigger in SOP-COB-009?",
+];
+const suggBox = document.getElementById("suggestions");
+suggestions.forEach(s => {
+  const b = document.createElement("div");
+  b.className = "sugg";
+  b.textContent = s;
+  b.onclick = () => { document.getElementById("q").value = s; sendQuery(); };
+  suggBox.appendChild(b);
+});
+
+const messagesEl = document.getElementById("messages");
+
+function addUserMsg(text) {
+  const d = document.createElement("div");
+  d.className = "msg-user";
+  d.textContent = text;
+  messagesEl.appendChild(d);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function addBotMsg(answer, citations) {
+  const d = document.createElement("div");
+  d.className = "msg-bot";
+  d.textContent = answer || "No relevant information found.";
+  if (citations && citations.length) {
+    const cwrap = document.createElement("div");
+    cwrap.className = "citations";
+    citations.forEach(c => {
+      const chip = document.createElement("span");
+      chip.className = "citation-chip";
+      chip.textContent = `${c.title} · ${c.score}`;
+      cwrap.appendChild(chip);
+    });
+    d.appendChild(cwrap);
+    [...cwrap.children].forEach((chip, idx) => {
+      const source = citations[idx] && citations[idx].source_url;
+      if (source) {
+        chip.title = "Open source document";
+        chip.onclick = () => window.open(API + source, "_blank");
+      }
+    });
+  }
+  messagesEl.appendChild(d);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+async function sendQuery() {
+  const input = document.getElementById("q");
+  const question = input.value.trim();
+  if (!question) return;
+  addUserMsg(question);
+  input.value = "";
+  try {
+    const r = await fetch(API + "/api/query", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question }),
+    });
+    const data = await r.json();
+    if (typeof data.confidence === "number") {
+      data.answer = `${data.answer}\n\nConfidence: ${data.confidence}`;
+    }
+    addBotMsg(data.answer, data.citations);
+  } catch (e) {
+    addBotMsg("Could not reach the API. Make sure the backend is running on " + API);
+  }
+}
+
+document.getElementById("send").onclick = sendQuery;
+document.getElementById("q").addEventListener("keydown", e => { if (e.key === "Enter") sendQuery(); });
+
+async function loadIntel(endpoint, targetId) {
+  const box = document.getElementById(targetId);
+  try {
+    const r = await fetch(API + endpoint);
+    const data = await r.json();
+    box.innerHTML = "";
+    const summary = document.createElement("div");
+    summary.className = "intel-summary";
+    summary.textContent = data.summary;
+    box.appendChild(summary);
+    (data.items || []).slice(0, 3).forEach(item => {
+      const row = document.createElement("div");
+      row.className = "intel-item";
+      row.textContent = item.evidence;
+      const link = document.createElement("a");
+      link.className = "intel-link";
+      link.href = API + item.source_url;
+      link.target = "_blank";
+      link.textContent = item.title;
+      row.appendChild(document.createElement("br"));
+      row.appendChild(link);
+      box.appendChild(row);
+    });
+  } catch (e) {
+    box.textContent = "Unavailable until the API is running.";
+  }
+}
+
+loadStats();
+loadDocs();
+loadGraph();
+loadIntel("/api/compliance-gaps", "compliance");
+loadIntel("/api/maintenance-intelligence", "maintenance");
+loadIntel("/api/lessons-learned", "lessons");
+</script>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+AUDIT FINDING: AF-2026-002
+Audit Type: Internal Quality & Compliance Audit
+Plant: Vizag Steel Works
+Auditor: Quality Assurance Cell, Corporate Office
+Date: 2026-02-01
+
+FINDING DESCRIPTION:
+Audit identified a systemic gap: SCADA gas pressure monitoring (sensors
+GPS-COB-* series) and the Permit-to-Work software operate as disconnected
+systems with no automated cross-referencing. This was independently flagged
+in Non-Conformance NC-2026-019 (raised during Inspection INS-2026-0341) and
+is consistent with the contributing factor pattern described in Near-Miss
+Report INC-2025-0118 and addressed procedurally (but not technically) in
+SOP-COB-009 Revision 4.
+
+RISK RATING: High. Three independent records (inspection, incident, and
+procedure revision) point to the same unresolved technical gap across an
+18-month period without remediation.
+
+CORRECTIVE ACTION REQUIRED:
+Plant Engineering to implement automated alerting linking SCADA gas pressure
+readings to active Permit-to-Work status, with mandatory escalation per
+SOP-COB-009 trigger criteria. Target closure: 2026-06-30.
+
+REGULATORY REFERENCE: OISD-STD-113, Factory Act 1948 Section 87, DGMS
+Circular 4/2025.

@@ -1,0 +1,30 @@
+NEAR-MISS / INCIDENT REPORT: INC-2025-0118
+Plant: Vizag Steel Works - Coke Oven Battery 3
+Date of Occurrence: 2025-11-22
+Reported By: Shift In-Charge R. Mehta
+Classification: Near-Miss (High Potential)
+
+SUMMARY:
+During a planned shutdown of COB-3, gas pressure sensor GPS-COB3-07 logged a
+transient spike to 1.6x baseline for approximately 4 minutes. At the same time,
+a hot work permit (HWP-1188) was active for welding repairs on an adjacent
+structural support, located approximately 12 metres from the gas main entry
+point. Neither the SCADA system nor the Permit-to-Work system flagged the
+co-occurrence automatically; the condition was only noticed when the Shift
+In-Charge happened to review both screens manually within the same window.
+
+Work was halted manually as a precaution. No injury or equipment damage
+occurred. Root cause investigation attributed the pressure spike to a
+temporary venting valve misconfiguration, corrected the same day.
+
+LESSON LEARNED:
+This is the second recorded instance (see also Audit Finding AF-2026-002, and
+the pattern referenced in SOP-COB-009 Revision 4) where dangerous compound
+conditions - elevated gas pressure plus nearby hot work - existed without any
+automated cross-system alert. Manual vigilance is not a reliable control.
+
+REGULATORY REFERENCE: OISD-STD-113, Factory Act 1948 Section 87.
+FOLLOW-UP: SOP-COB-009 was revised (Rev. 4, effective 2025-09-01) to formalize
+this combination as an automatic stop-work trigger, ahead of this incident.
+Subsequent inspection INS-2026-0341 confirmed the system gap remains
+unresolved at the SCADA/PTW integration level.

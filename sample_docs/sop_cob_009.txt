@@ -1,0 +1,34 @@
+SAFETY OPERATING PROCEDURE: SOP-COB-009
+Title: Confined Space Entry - Coke Oven Battery Gas Mains
+Plant: Vizag Steel Works
+Revision: 4
+Effective Date: 2025-09-01
+Owner: Head of Safety, P. Krishnan
+
+SCOPE:
+This procedure applies to all confined space entries into coke oven gas main
+tunnels, flue galleries, and sub-floor ducting across COB-1, COB-2, and COB-3.
+
+PRE-ENTRY REQUIREMENTS:
+1. Valid Permit-to-Work (PTW) issued by Shift In-Charge.
+2. Gas test: O2 (19.5-23.5%), H2S (<10 ppm), CO (<35 ppm), confirmed by
+   calibrated portable gas detector. Equipment Tag of detector logged on PTW.
+3. No concurrent hot work permits within 15 metres of entry point - cross-check
+   against active Hot Work Permit register before issuing PTW.
+4. Standby person stationed at entry point for full duration.
+5. Communication check (radio or signal line) established.
+
+ESCALATION TRIGGER:
+If gas pressure sensors (Tag Series: GPS-COB-*) show readings above 1.5x
+baseline AND a confined space entry or hot work permit is active within the
+same zone, the Shift In-Charge must suspend entry immediately and escalate to
+Plant Safety Officer. This compound condition was identified as a contributing
+factor in the January 2025 coke oven battery explosion (per The Wire
+investigative report) and is now treated as a mandatory automatic stop-work
+trigger under this revision.
+
+REGULATORY BASIS: OISD-STD-113, Factory Act 1948 Section 36 (Confined Spaces),
+DGMS Circular 4/2025.
+
+RELATED DOCUMENTS: Incident Report INC-2025-0118, Work Order WO-4471 (fan
+bearing failure pattern), Audit Finding AF-2026-002.

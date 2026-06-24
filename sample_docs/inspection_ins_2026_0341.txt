@@ -1,0 +1,26 @@
+INSPECTION REPORT: INS-2026-0341
+Plant: Vizag Steel Works - Coke Oven Battery 3
+Equipment Tag: GPS-COB3-07 (Gas Pressure Sensor)
+Inspection Type: Calibration & Functional Check
+Inspector: T. Naidu (Certified Instrumentation Inspector, Cert No. INS-1187)
+Date: 2026-01-30
+
+FINDINGS:
+Gas pressure sensor GPS-COB3-07 calibration drift measured at 4.2% of span,
+within acceptable tolerance (5%) but trending upward over last 3 inspections
+(2025-07: 1.1%, 2025-10: 2.8%, 2026-01: 4.2%). Recommend recalibration before
+next scheduled interval if drift exceeds 4.5% at any point.
+
+Sensor wiring and SCADA integration confirmed functional - readings correctly
+relayed to central control room display within 2 second latency.
+
+CROSS-REFERENCE: This sensor is located in the same gas main segment referenced
+in SOP-COB-009 escalation trigger criteria. No automated linkage currently
+exists between this sensor's drift trend and active Permit-to-Work status -
+flagged as a system gap (see Audit Finding AF-2026-002).
+
+NON-CONFORMANCE: NC-2026-019 raised against absence of automated cross-system
+alerting between SCADA gas readings and Permit-to-Work software. Corrective
+Action Request issued to Plant Engineering.
+
+REGULATORY REFERENCE: OISD-STD-113, DGMS Circular 4/2025.
